@@ -31,6 +31,7 @@ class ReportConfig:
     openai_model: str = os.getenv("OPENAI_MODEL", "gpt-5.4-mini")
     openai_web_search_tool_type: str = os.getenv("OPENAI_WEB_SEARCH_TOOL_TYPE", "web_search")
     openai_reasoning_effort: str = os.getenv("OPENAI_REASONING_EFFORT", "medium")
+    allow_live_openai: bool = os.getenv("ALLOW_LIVE_OPENAI", "").lower() in {"1", "true", "yes", "on"}
 
 
 def _normalize_text(value: Any, fallback: str = "не встановлено") -> str:
@@ -232,6 +233,85 @@ def _normalize_report_payload(payload: dict[str, Any], edrpou: str) -> dict[str,
     }
 
 
+def build_mock_report_data(edrpou: str, company_name_hint: str | None = None) -> dict[str, Any]:
+    company_name = company_name_hint or f"Тестова компанія {edrpou}"
+    return {
+        "report_date": REPORT_DATE,
+        "company": {
+            "company_name": company_name,
+            "full_name": f"ТОВ \"{company_name}\"",
+            "status": "зареєстровано",
+            "registration_date": "не встановлено",
+            "legal_address": "не встановлено",
+            "director": "не встановлено",
+            "main_kved": "не встановлено",
+            "activity_and_assets": (
+                "Тестовий безкоштовний режим. Реальні дані OpenAI не викликались. "
+                "Цей документ призначений для перевірки Render, Swagger, карти та збірки DOCX."
+            ),
+            "edrpou": edrpou,
+        },
+        "group": {
+            "membership_and_role": (
+                "Тестовий режим. Належність до бізнес-групи не досліджувалась, "
+                "оскільки для цього запуску OpenAI API не використовувався."
+            ),
+            "group_name": "Тестова бізнес-група",
+            "controlling_persons": "не встановлено",
+            "business_lines": "Тестова генерація документа",
+            "geography": "Україна",
+            "asset_types": "hq, production",
+            "key_group_companies": f"{company_name}; Тест Логістик; Тест Виробництво",
+        },
+        "beneficiaries": [
+            {
+                "person": "не встановлено",
+                "status": "",
+                "control_basis": "",
+                "reliability": "",
+            }
+        ],
+        "events": [
+            {
+                "event_or_risk": "Тестовий запуск сервісу",
+                "impact": "Перевірка генерації документа без витрат на OpenAI API",
+                "date_or_period": REPORT_DATE,
+            }
+        ],
+        "sources": [
+            {
+                "source_name": "Локальний mock-режим сервісу",
+                "source_date": REPORT_DATE,
+                "source_fact": "Документ згенеровано без реального дослідження зовнішніх джерел",
+                "source_url": "https://companyinfoua.onrender.com/docs",
+            }
+        ],
+        "map": {
+            "group_name": "Тестова бізнес-група",
+            "description": "Тестова карта активів",
+            "show_title": False,
+            "show_legend": False,
+            "derive_active_regions": True,
+            "assets": [
+                {
+                    "name": "Тестовий офіс",
+                    "type": "hq",
+                    "region_id": "UA32",
+                    "city": "Київ",
+                    "show_label": True,
+                },
+                {
+                    "name": "Тестовий майданчик",
+                    "type": "production",
+                    "region_id": "UA12",
+                    "city": "Дніпро",
+                    "show_label": True,
+                },
+            ],
+        },
+    }
+
+
 def _research_prompt(edrpou: str, company_name_hint: str | None, additional_instructions: str | None) -> str:
     hint_line = f"Назва-підказка: {company_name_hint}\n" if company_name_hint else ""
     extra_line = f"Додаткові інструкції користувача: {additional_instructions}\n" if additional_instructions else ""
@@ -252,70 +332,6 @@ def _research_prompt(edrpou: str, company_name_hint: str | None, additional_inst
 - beneficiaries, events, sources мають бути масивами об'єктів.
 
 Поверни ТІЛЬКИ один JSON-об'єкт без markdown.
-
-Формат JSON:
-{{
-  "report_date": "{REPORT_DATE}",
-  "company": {{
-    "company_name": "коротка назва",
-    "full_name": "повна назва",
-    "status": "статус",
-    "registration_date": "дата",
-    "legal_address": "адреса",
-    "director": "керівник",
-    "main_kved": "основний КВЕД",
-    "activity_and_assets": "один короткий абзац для розділу 1"
-  }},
-  "group": {{
-    "membership_and_role": "до 120 слів для розділу 2",
-    "group_name": "назва групи або не встановлено",
-    "controlling_persons": "контролюючі особи",
-    "business_lines": "основні напрями",
-    "geography": "географія бізнесу",
-    "asset_types": "основні види активів",
-    "key_group_companies": "не більше 5 компаній"
-  }},
-  "beneficiaries": [
-    {{
-      "person": "ПІБ або назва",
-      "status": "статус",
-      "control_basis": "підстава контролю",
-      "reliability": "висока|середня|обмежена"
-    }}
-  ],
-  "events": [
-    {{
-      "event_or_risk": "подія або ризик",
-      "impact": "значення для компанії чи групи",
-      "date_or_period": "дата або період"
-    }}
-  ],
-  "sources": [
-    {{
-      "source_name": "назва джерела",
-      "source_date": "дата або період актуальності",
-      "source_fact": "який факт підтверджує",
-      "source_url": "https://..."
-    }}
-  ],
-  "map": {{
-    "group_name": "назва групи",
-    "description": "карта активів бізнес-групи",
-    "show_title": false,
-    "show_legend": false,
-    "derive_active_regions": true,
-    "assets": [
-      {{
-        "name": "назва активу",
-        "type": "hq|production|quarry|warehouse|retail|logistics|energy|agriculture|other",
-        "region_id": "UA..",
-        "lat": 0.0,
-        "lon": 0.0,
-        "city": "місто"
-      }}
-    ]
-  }}
-}}
 """.strip()
 
 
@@ -481,13 +497,27 @@ def build_download_name(filename: str) -> str:
     return quote(filename)
 
 
-def generate_report_bundle(edrpou: str, company_name_hint: str | None, additional_instructions: str | None, base_dir: Path, config: ReportConfig | None = None) -> dict[str, Any]:
-    report_data = research_company_report(
-        edrpou=edrpou,
-        company_name_hint=company_name_hint,
-        additional_instructions=additional_instructions,
-        config=config,
-    )
+def generate_report_bundle(
+    edrpou: str,
+    company_name_hint: str | None,
+    additional_instructions: str | None,
+    base_dir: Path,
+    config: ReportConfig | None = None,
+    live_mode: bool = False,
+) -> dict[str, Any]:
+    config = config or ReportConfig()
+    if live_mode:
+        if not config.allow_live_openai:
+            raise RuntimeError("Live OpenAI mode is disabled. Set ALLOW_LIVE_OPENAI=true to enable paid requests.")
+        report_data = research_company_report(
+            edrpou=edrpou,
+            company_name_hint=company_name_hint,
+            additional_instructions=additional_instructions,
+            config=config,
+        )
+    else:
+        report_data = build_mock_report_data(edrpou=edrpou, company_name_hint=company_name_hint)
+
     map_png_bytes = render_map_png(report_data["map"], base_dir=base_dir)
     docx_bytes = build_docx_report(
         report_data=report_data,
@@ -499,6 +529,7 @@ def generate_report_bundle(edrpou: str, company_name_hint: str | None, additiona
         "filename": filename,
         "download_name": build_download_name(filename),
         "report_data": report_data,
+        "live_mode": live_mode,
         "docx_bytes": docx_bytes,
         "docx_base64": base64.b64encode(docx_bytes).decode("ascii"),
         "map_png_base64": base64.b64encode(map_png_bytes).decode("ascii"),

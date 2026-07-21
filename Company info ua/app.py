@@ -60,13 +60,18 @@ class MapRenderRequest(BaseModel):
 
 
 class ReportGenerateRequest(BaseModel):
-    edrpou: str = Field(..., min_length=8, max_length=10, description="ЄДРПОУ компанії")
-    company_name_hint: str | None = Field(default=None, description="Необов'язкова підказка по назві компанії")
-    additional_instructions: str | None = Field(default=None, description="Додаткові уточнення для серверного агента")
+    edrpou: str = Field(..., min_length=8, max_length=10, description="EDRPOU company code")
+    company_name_hint: str | None = Field(default=None, description="Optional company name hint")
+    additional_instructions: str | None = Field(default=None, description="Optional extra instructions for live research")
+    live_mode: bool = Field(
+        default=False,
+        description="False by default. Free mock mode without OpenAI API calls. Set true only for paid live research.",
+    )
 
 
 class ReportGenerateResponse(BaseModel):
     filename: str
+    live_mode: bool
     docx_base64: str
     map_png_base64: str
     report_data: dict[str, Any]
@@ -74,7 +79,7 @@ class ReportGenerateResponse(BaseModel):
 
 app = FastAPI(
     title="CompanyInfo UA Agent Assets",
-    version="0.1.0",
+    version="0.2.0",
     description="Render-ready host for CompanyInfo UA report instructions, templates, and business-map rendering.",
 )
 
@@ -94,14 +99,20 @@ def root() -> dict[str, Any]:
             "generate_report_file": "/api/generate-report-file",
             "docx_template": "/downloads/docx-template",
         },
+        "safe_defaults": {
+            "live_mode_default": False,
+            "allow_live_openai_env_required": True,
+        },
     }
 
 
 @app.get("/health")
 def health() -> dict[str, str]:
+    config = ReportConfig()
     return {
         "status": "ok",
         "openai_api_key_configured": "true" if bool(os.getenv("OPENAI_API_KEY")) else "false",
+        "allow_live_openai": "true" if config.allow_live_openai else "false",
     }
 
 
@@ -158,12 +169,14 @@ def generate_report(payload: ReportGenerateRequest) -> ReportGenerateResponse:
             additional_instructions=payload.additional_instructions,
             base_dir=BASE_DIR,
             config=ReportConfig(),
+            live_mode=payload.live_mode,
         )
     except Exception as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
     return ReportGenerateResponse(
         filename=bundle["filename"],
+        live_mode=bundle["live_mode"],
         docx_base64=bundle["docx_base64"],
         map_png_base64=bundle["map_png_base64"],
         report_data=bundle["report_data"],
@@ -179,6 +192,7 @@ def generate_report_file(payload: ReportGenerateRequest) -> StreamingResponse:
             additional_instructions=payload.additional_instructions,
             base_dir=BASE_DIR,
             config=ReportConfig(),
+            live_mode=payload.live_mode,
         )
     except Exception as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
