@@ -1,0 +1,321 @@
+{
+  "template": "ua-business-assets-map",
+  "version": "1.0.0",
+  "viewBox": [
+    0,
+    0,
+    1000,
+    669
+  ],
+  "projection": {
+    "type": "web_mercator_affine",
+    "longitude_to_x": {
+      "a": 50.44295494,
+      "b": -1071.1938923
+    },
+    "latitude_to_y": {
+      "a": -2890.33445159,
+      "b": 3142.28933775,
+      "function": "a*ln(tan(pi/4+lat*pi/360))+b"
+    },
+    "note": "Використовуйте для координат населених пунктів; для активу без координат використовуйте anchor відповідного регіону."
+  },
+  "layers": {
+    "immutable": [
+      "map-background",
+      "map-regions",
+      "region-anchors"
+    ],
+    "dynamic": [
+      "active-regions-overlay",
+      "asset-connections",
+      "asset-markers",
+      "asset-labels",
+      "map-title-layer",
+      "map-legend"
+    ]
+  },
+  "asset_types": {
+    "hq": {
+      "label_uk": "Головний офіс",
+      "color": "#253858"
+    },
+    "production": {
+      "label_uk": "Виробництво",
+      "color": "#D35400"
+    },
+    "quarry": {
+      "label_uk": "Кар’єр / видобуток",
+      "color": "#795548"
+    },
+    "warehouse": {
+      "label_uk": "Склад / елеватор",
+      "color": "#7A4EAB"
+    },
+    "retail": {
+      "label_uk": "Торгова мережа",
+      "color": "#00897B"
+    },
+    "logistics": {
+      "label_uk": "Логістика",
+      "color": "#1565C0"
+    },
+    "energy": {
+      "label_uk": "Енергетичний актив",
+      "color": "#F9A825"
+    },
+    "agriculture": {
+      "label_uk": "Агроактив",
+      "color": "#558B2F"
+    },
+    "other": {
+      "label_uk": "Інший актив",
+      "color": "#546E7A"
+    }
+  },
+  "regions": {
+    "UA43": {
+      "name_uk": "Автономна Республіка Крим",
+      "name_en": "Autonomous Republic of Crimea",
+      "short_name_uk": "АР Крим",
+      "anchor": {
+        "x": 651.6,
+        "y": 579.6
+      }
+    },
+    "UA05": {
+      "name_uk": "Вінницька область",
+      "name_en": "Vinnytsia Oblast",
+      "short_name_uk": "Вінницька",
+      "anchor": {
+        "x": 377.1,
+        "y": 307.0
+      }
+    },
+    "UA07": {
+      "name_uk": "Волинська область",
+      "name_en": "Volyn Oblast",
+      "short_name_uk": "Волинська",
+      "anchor": {
+        "x": 182.2,
+        "y": 126.2
+      }
+    },
+    "UA12": {
+      "name_uk": "Дніпропетровська область",
+      "name_en": "Dnipropetrovsk Oblast",
+      "short_name_uk": "Дніпропетровська",
+      "anchor": {
+        "x": 654.6,
+        "y": 365.4
+      }
+    },
+    "UA14": {
+      "name_uk": "Донецька область",
+      "name_en": "Donetsk Oblast",
+      "short_name_uk": "Донецька",
+      "anchor": {
+        "x": 829.9,
+        "y": 372.1
+      }
+    },
+    "UA18": {
+      "name_uk": "Житомирська область",
+      "name_en": "Zhytomyr Oblast",
+      "short_name_uk": "Житомирська",
+      "anchor": {
+        "x": 359.9,
+        "y": 168.9
+      }
+    },
+    "UA21": {
+      "name_uk": "Закарпатська область",
+      "name_en": "Zakarpattia Oblast",
+      "short_name_uk": "Закарпатська",
+      "anchor": {
+        "x": 103.0,
+        "y": 342.8
+      }
+    },
+    "UA23": {
+      "name_uk": "Запорізька область",
+      "name_en": "Zaporizhzhia Oblast",
+      "short_name_uk": "Запорізька",
+      "anchor": {
+        "x": 724.3,
+        "y": 427.8
+      }
+    },
+    "UA26": {
+      "name_uk": "Івано-Франківська область",
+      "name_en": "Ivano-Frankivsk Oblast",
+      "short_name_uk": "Івано-Франківська",
+      "anchor": {
+        "x": 171.5,
+        "y": 320.4
+      }
+    },
+    "UA30": {
+      "name_uk": "Київська область",
+      "name_en": "Kyiv Oblast",
+      "short_name_uk": "Київська область",
+      "anchor": {
+        "x": 454.3,
+        "y": 233.0
+      }
+    },
+    "UA35": {
+      "name_uk": "Кіровоградська область",
+      "name_en": "Kirovohrad Oblast",
+      "short_name_uk": "Кіровоградська",
+      "anchor": {
+        "x": 562.9,
+        "y": 343.7
+      }
+    },
+    "UA09": {
+      "name_uk": "Луганська область",
+      "name_en": "Luhansk Oblast",
+      "short_name_uk": "Луганська",
+      "anchor": {
+        "x": 895.2,
+        "y": 300.8
+      }
+    },
+    "UA46": {
+      "name_uk": "Львівська область",
+      "name_en": "Lviv Oblast",
+      "short_name_uk": "Львівська",
+      "anchor": {
+        "x": 134.2,
+        "y": 240.8
+      }
+    },
+    "UA48": {
+      "name_uk": "Миколаївська область",
+      "name_en": "Mykolaiv Oblast",
+      "short_name_uk": "Миколаївська",
+      "anchor": {
+        "x": 533.1,
+        "y": 433.3
+      }
+    },
+    "UA51": {
+      "name_uk": "Одеська область",
+      "name_en": "Odesa Oblast",
+      "short_name_uk": "Одеська",
+      "anchor": {
+        "x": 466.1,
+        "y": 450.5
+      }
+    },
+    "UA53": {
+      "name_uk": "Полтавська область",
+      "name_en": "Poltava Oblast",
+      "short_name_uk": "Полтавська",
+      "anchor": {
+        "x": 634.0,
+        "y": 244.0
+      }
+    },
+    "UA56": {
+      "name_uk": "Рівненська область",
+      "name_en": "Rivne Oblast",
+      "short_name_uk": "Рівненська",
+      "anchor": {
+        "x": 271.7,
+        "y": 125.5
+      }
+    },
+    "UA59": {
+      "name_uk": "Сумська область",
+      "name_en": "Sumy Oblast",
+      "short_name_uk": "Сумська",
+      "anchor": {
+        "x": 630.9,
+        "y": 138.9
+      }
+    },
+    "UA61": {
+      "name_uk": "Тернопільська область",
+      "name_en": "Ternopil Oblast",
+      "short_name_uk": "Тернопільська",
+      "anchor": {
+        "x": 221.9,
+        "y": 270.0
+      }
+    },
+    "UA63": {
+      "name_uk": "Харківська область",
+      "name_en": "Kharkiv Oblast",
+      "short_name_uk": "Харківська",
+      "anchor": {
+        "x": 768.7,
+        "y": 261.5
+      }
+    },
+    "UA65": {
+      "name_uk": "Херсонська область",
+      "name_en": "Kherson Oblast",
+      "short_name_uk": "Херсонська",
+      "anchor": {
+        "x": 633.4,
+        "y": 458.9
+      }
+    },
+    "UA68": {
+      "name_uk": "Хмельницька область",
+      "name_en": "Khmelnytskyi Oblast",
+      "short_name_uk": "Хмельницька",
+      "anchor": {
+        "x": 288.0,
+        "y": 256.0
+      }
+    },
+    "UA71": {
+      "name_uk": "Черкаська область",
+      "name_en": "Cherkasy Oblast",
+      "short_name_uk": "Черкаська",
+      "anchor": {
+        "x": 524.1,
+        "y": 269.4
+      }
+    },
+    "UA77": {
+      "name_uk": "Чернівецька область",
+      "name_en": "Chernivtsi Oblast",
+      "short_name_uk": "Чернівецька",
+      "anchor": {
+        "x": 238.2,
+        "y": 352.9
+      }
+    },
+    "UA74": {
+      "name_uk": "Чернігівська область",
+      "name_en": "Chernihiv Oblast",
+      "short_name_uk": "Чернігівська",
+      "anchor": {
+        "x": 544.3,
+        "y": 113.0
+      }
+    },
+    "UA32": {
+      "name_uk": "місто Київ",
+      "name_en": "Kyiv City",
+      "short_name_uk": "Київ",
+      "anchor": {
+        "x": 469.9,
+        "y": 187.8
+      }
+    },
+    "UA40": {
+      "name_uk": "місто Севастополь",
+      "name_en": "Sevastopol City",
+      "short_name_uk": "Севастополь",
+      "anchor": {
+        "x": 619.3,
+        "y": 624.0
+      }
+    }
+  }
+}

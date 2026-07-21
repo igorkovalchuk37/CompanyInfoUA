@@ -1,0 +1,29 @@
+{
+  "group_name": "Назва бізнес-групи",
+  "description": "Карта активів бізнес-групи в Україні",
+  "show_title": false,
+  "show_legend": false,
+  "derive_active_regions": true,
+  "active_regions": [],
+  "assets": [
+    {
+      "id": "asset-1",
+      "name": "Назва активу",
+      "type": "production",
+      "region_id": "UA12",
+      "lat": 48.0,
+      "lon": 33.0,
+      "city": "Населений пункт",
+      "show_label": true,
+      "label_side": "auto"
+    },
+    {
+      "id": "asset-2",
+      "name": "Актив без точних координат",
+      "type": "warehouse",
+      "region_id": "UA46",
+      "show_label": true,
+      "label_side": "auto"
+    }
+  ]
+}

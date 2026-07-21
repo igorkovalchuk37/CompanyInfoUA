@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ua-business-map-data.schema.json",
+  "title": "Дані карти активів бізнес-групи",
+  "type": "object",
+  "required": [
+    "assets"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "group_name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "subtitle": {
+      "type": "string"
+    },
+    "show_title": {
+      "type": "boolean",
+      "default": false
+    },
+    "show_legend": {
+      "type": "boolean",
+      "default": false
+    },
+    "derive_active_regions": {
+      "type": "boolean",
+      "default": true
+    },
+    "active_regions": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "UA43",
+          "UA05",
+          "UA07",
+          "UA12",
+          "UA14",
+          "UA18",
+          "UA21",
+          "UA23",
+          "UA26",
+          "UA30",
+          "UA35",
+          "UA09",
+          "UA46",
+          "UA48",
+          "UA51",
+          "UA53",
+          "UA56",
+          "UA59",
+          "UA61",
+          "UA63",
+          "UA65",
+          "UA68",
+          "UA71",
+          "UA77",
+          "UA74",
+          "UA32",
+          "UA40"
+        ]
+      }
+    },
+    "assets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "type"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "type": {
+            "enum": [
+              "hq",
+              "production",
+              "quarry",
+              "warehouse",
+              "retail",
+              "logistics",
+              "energy",
+              "agriculture",
+              "other"
+            ]
+          },
+          "region_id": {
+            "enum": [
+              "UA43",
+              "UA05",
+              "UA07",
+              "UA12",
+              "UA14",
+              "UA18",
+              "UA21",
+              "UA23",
+              "UA26",
+              "UA30",
+              "UA35",
+              "UA09",
+              "UA46",
+              "UA48",
+              "UA51",
+              "UA53",
+              "UA56",
+              "UA59",
+              "UA61",
+              "UA63",
+              "UA65",
+              "UA68",
+              "UA71",
+              "UA77",
+              "UA74",
+              "UA32",
+              "UA40"
+            ]
+          },
+          "lat": {
+            "type": "number",
+            "minimum": 43,
+            "maximum": 53
+          },
+          "lon": {
+            "type": "number",
+            "minimum": 21,
+            "maximum": 41
+          },
+          "x": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1000
+          },
+          "y": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 669
+          },
+          "city": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "show_label": {
+            "type": "boolean",
+            "default": true
+          },
+          "show_sublabel": {
+            "type": "boolean",
+            "default": true
+          },
+          "label_side": {
+            "enum": [
+              "auto",
+              "left",
+              "right"
+            ],
+            "default": "auto"
+          },
+          "label_dy": {
+            "type": "number"
+          }
+        },
+        "anyOf": [
+          {
+            "required": [
+              "lat",
+              "lon"
+            ]
+          },
+          {
+            "required": [
+              "x",
+              "y"
+            ]
+          },
+          {
+            "required": [
+              "region_id"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
