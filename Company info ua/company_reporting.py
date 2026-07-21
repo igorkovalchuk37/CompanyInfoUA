@@ -107,8 +107,7 @@ def _fill_repeating_table(table: Any, token: str, rows_data: list[dict[str, str]
             for placeholder, value in row_replacements.items():
                 updated = updated.replace(placeholder, value)
             text_node.text = updated
-        table._tbl.insert(row_index, new_tr)
-        row_index += 1
+        table._tbl.append(new_tr)
 
     table._tbl.remove(template_tr)
 
