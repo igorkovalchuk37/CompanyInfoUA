@@ -101,17 +101,13 @@ def _fill_repeating_table(table: Any, token: str, rows_data: list[dict[str, str]
 
     for row_data in rows_data:
         new_tr = copy.deepcopy(template_tr)
-        table._tbl.insert(row_index, new_tr)
-        new_row = table.rows[row_index]
         row_replacements = {key: _normalize_text(value, "") for key, value in row_data.items()}
-        for cell in new_row.cells:
-            for paragraph in cell.paragraphs:
-                combined = "".join(run.text for run in paragraph.runs) if paragraph.runs else paragraph.text
-                updated = combined
-                for placeholder, value in row_replacements.items():
-                    updated = updated.replace(placeholder, value)
-                if updated != combined:
-                    _replace_paragraph_text(paragraph, updated)
+        for text_node in new_tr.xpath(".//w:t"):
+            updated = text_node.text or ""
+            for placeholder, value in row_replacements.items():
+                updated = updated.replace(placeholder, value)
+            text_node.text = updated
+        table._tbl.insert(row_index, new_tr)
         row_index += 1
 
     table._tbl.remove(template_tr)
